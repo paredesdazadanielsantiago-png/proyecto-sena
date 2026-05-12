@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Producto - Inventario</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Registrar Producto</h1>
+            <a href="index.jsp" class="btn-home">← Volver al Inicio</a>
+        </header>
+
+        <main>
+            <div class="formulario-container">
+                <form method="POST" action="productos" class="formulario-producto" onsubmit="return validarFormularioProducto(event)">
+                    <input type="hidden" name="accion" value="crear">
+
+                    <div class="form-group">
+                        <label for="codigo">
+                            <strong>Código del Producto</strong>
+                            <span class="requerido">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="codigo"
+                            name="codigo"
+                            placeholder="Ej: PROD001"
+                            required
+                            maxlength="50"
+                            pattern="[A-Z0-9]+"
+                            title="Solo mayúsculas y números">
+                        <small>Máximo 50 caracteres. Solo mayúsculas y números.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">
+                            <strong>Nombre del Producto</strong>
+                            <span class="requerido">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            placeholder="Ej: Camiseta Azul"
+                            required
+                            maxlength="100">
+                        <small>Máximo 100 caracteres.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">
+                            <strong>Descripción</strong>
+                            <span class="opcional">(opcional)</span>
+                        </label>
+                        <textarea
+                            id="descripcion"
+                            name="descripcion"
+                            rows="5"
+                            maxlength="500"
+                            placeholder="Describa el producto..."></textarea>
+                        <small id="descLength">0 / 500 caracteres</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="categoria">
+                                <strong>Categoría</strong>
+                                <span class="requerido">*</span>
+                            </label>
+                            <select id="categoria" name="categoria" required>
+                                <option value="">-- Seleccione una categoría --</option>
+                                <option value="Ropa">Ropa y Accesorios</option>
+                                <option value="Electrónica">Electrónica</option>
+                                <option value="Alimentación">Alimentación</option>
+                                <option value="Hogar">Hogar</option>
+                                <option value="Libros">Libros</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="precio">
+                                <strong>Precio Unitario</strong>
+                                <span class="requerido">*</span>
+                            </label>
+                            <div class="input-currency">
+                                <span class="currency-symbol">$</span>
+                                <input
+                                    type="number"
+                                    id="precio"
+                                    name="precio"
+                                    placeholder="0.00"
+                                    step="0.01"
+                                    min="0"
+                                    max="99999.99"
+                                    required>
+                            </div>
+                            <small>Precio debe ser mayor o igual a 0.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cantidad">
+                            <strong>Cantidad en Stock</strong>
+                            <span class="requerido">*</span>
+                        </label>
+                        <input
+                            type="number"
+                            id="cantidad"
+                            name="cantidad"
+                            placeholder="0"
+                            min="0"
+                            max="999999"
+                            required>
+                        <small>Unidades disponibles en inventario.</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">✓ Guardar Producto</button>
+                        <button type="reset" class="btn btn-secondary btn-large">↻ Limpiar</button>
+                        <a href="index.jsp" class="btn btn-secondary btn-large">✕ Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Sistema de Inventario</p>
+        </footer>
+    </div>
+
+    <script>
+        const descripcion = document.getElementById('descripcion');
+        const descLength = document.getElementById('descLength');
+
+        descripcion.addEventListener('input', () => {
+            descLength.textContent = `${descripcion.value.length} / 500 caracteres`;
+        });
+
+        function validarFormularioProducto(event) {
+            const codigo = document.getElementById('codigo').value.trim();
+            const nombre = document.getElementById('nombre').value.trim();
+            const precio = parseFloat(document.getElementById('precio').value);
+            const cantidad = parseInt(document.getElementById('cantidad').value, 10);
+            const categoria = document.getElementById('categoria').value;
+
+            if (!codigo) {
+                alert('El código del producto es obligatorio.');
+                document.getElementById('codigo').focus();
+                event.preventDefault();
+                return false;
+            }
+            if (!/^[A-Z0-9]+$/.test(codigo)) {
+                alert('El código debe contener solo mayúsculas y números.');
+                document.getElementById('codigo').focus();
+                event.preventDefault();
+                return false;
+            }
+            if (!nombre) {
+                alert('El nombre del producto es obligatorio.');
+                document.getElementById('nombre').focus();
+                event.preventDefault();
+                return false;
+            }
+            if (!categoria) {
+                alert('Seleccione una categoría.');
+                document.getElementById('categoria').focus();
+                event.preventDefault();
+                return false;
+            }
+            if (isNaN(precio) || precio < 0) {
+                alert('Ingrese un precio válido mayor o igual a 0.');
+                document.getElementById('precio').focus();
+                event.preventDefault();
+                return false;
+            }
+            if (isNaN(cantidad) || cantidad < 0) {
+                alert('Ingrese una cantidad válida mayor o igual a 0.');
+                document.getElementById('cantidad').focus();
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>

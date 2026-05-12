@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'com.inventario'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Servlet API
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+    
+    // JSP API
+    providedCompile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+    providedCompile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1'
+    providedCompile 'org.apache.taglibs:taglibs-standard-spec:1.2.5'
+    providedCompile 'org.apache.taglibs:taglibs-standard-impl:1.2.5'
+    
+    // JDBC Driver MySQL
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    
+    // Connection Pooling (HikariCP)
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+    
+    // Logging
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
+    
+    // JSON Processing
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+war {
+    archiveFileName = 'inventario-app.war'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '7.6'
+}

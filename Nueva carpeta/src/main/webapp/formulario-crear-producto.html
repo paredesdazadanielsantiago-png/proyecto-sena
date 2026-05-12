@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nuevo Producto - Sistema de Inventarios</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Crear Nuevo Producto</h1>
+            <a href="index.jsp" class="btn-home">← Volver al Inicio</a>
+        </header>
+
+        <main>
+            <div class="formulario-container">
+                <form method="POST" action="productos" class="formulario-producto" onsubmit="validarFormulario(event)">
+                    <!-- Campo oculto para indicar la acción -->
+                    <input type="hidden" name="accion" value="crear">
+
+                    <!-- Código del Producto -->
+                    <div class="form-group">
+                        <label for="codigo">
+                            <strong>Código del Producto</strong>
+                            <span class="requerido">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="codigo" 
+                            name="codigo" 
+                            placeholder="Ej: PROD001"
+                            required
+                            maxlength="50"
+                            pattern="[A-Z0-9]+"
+                            title="Solo mayúsculas y números">
+                        <small>Máximo 50 caracteres, solo mayúsculas y números</small>
+                    </div>
+
+                    <!-- Nombre del Producto -->
+                    <div class="form-group">
+                        <label for="nombre">
+                            <strong>Nombre del Producto</strong>
+                            <span class="requerido">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="nombre" 
+                            name="nombre" 
+                            placeholder="Ej: Camiseta Azul"
+                            required
+                            maxlength="100">
+                        <small>Máximo 100 caracteres</small>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="form-group">
+                        <label for="descripcion">
+                            <strong>Descripción</strong>
+                            <span class="opcional">(opcional)</span>
+                        </label>
+                        <textarea 
+                            id="descripcion" 
+                            name="descripcion" 
+                            rows="5" 
+                            placeholder="Describa el producto en detalle..."
+                            maxlength="500"></textarea>
+                        <small id="descLength">0 / 500 caracteres</small>
+                    </div>
+
+                    <!-- Fila: Categoría y Precio -->
+                    <div class="form-row">
+                        <!-- Categoría -->
+                        <div class="form-group">
+                            <label for="categoria">
+                                <strong>Categoría</strong>
+                                <span class="requerido">*</span>
+                            </label>
+                            <select id="categoria" name="categoria" required>
+                                <option value="">-- Seleccione una categoría --</option>
+                                <option value="Ropa">👕 Ropa y Accesorios</option>
+                                <option value="Electrónica">💻 Electrónica</option>
+                                <option value="Alimentación">🍎 Alimentación</option>
+                                <option value="Hogar">🏠 Hogar</option>
+                                <option value="Libros">📚 Libros</option>
+                                <option value="Otros">📦 Otros</option>
+                            </select>
+                        </div>
+
+                        <!-- Precio Unitario -->
+                        <div class="form-group">
+                            <label for="precio">
+                                <strong>Precio Unitario</strong>
+                                <span class="requerido">*</span>
+                            </label>
+                            <div class="input-currency">
+                                <span class="currency-symbol">$</span>
+                                <input 
+                                    type="number" 
+                                    id="precio" 
+                                    name="precio" 
+                                    placeholder="0.00"
+                                    step="0.01"
+                                    min="0"
+                                    max="99999.99"
+                                    required>
+                            </div>
+                            <small>Precio debe ser mayor a $0</small>
+                        </div>
+                    </div>
+
+                    <!-- Cantidad en Stock -->
+                    <div class="form-group">
+                        <label for="cantidad">
+                            <strong>Cantidad en Stock</strong>
+                            <span class="requerido">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            id="cantidad" 
+                            name="cantidad" 
+                            placeholder="0"
+                            min="0"
+                            max="999999"
+                            required>
+                        <small>Unidades disponibles en inventario</small>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            ✓ Crear Producto
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-large">
+                            ↻ Limpiar Formulario
+                        </button>
+                        <a href="index.jsp" class="btn btn-secondary btn-large">
+                            ✕ Cancelar
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Información de Ayuda -->
+                <div class="info-box" style="margin-top: 30px;">
+                    <h3>💡 Ayuda</h3>
+                    <ul>
+                        <li><strong>Código:</strong> Identificador único del producto (ej: PROD001)</li>
+                        <li><strong>Nombre:</strong> Nombre comercial del producto</li>
+                        <li><strong>Descripción:</strong> Detalles adicionales del producto</li>
+                        <li><strong>Categoría:</strong> Clasificación del producto</li>
+                        <li><strong>Precio:</strong> Precio de venta unitario</li>
+                        <li><strong>Cantidad:</strong> Unidades disponibles actualmente</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Sistema de Gestión de Inventarios - Tiendas Pequeñas</p>
+        </footer>
+    </div>
+
+    <script>
+        // Contador de caracteres para descripción
+        document.getElementById('descripcion').addEventListener('input', function() {
+            const length = this.value.length;
+            document.getElementById('descLength').textContent = length + ' / 500 caracteres';
+        });
+
+        // Validación de formulario
+        function validarFormulario(event) {
+            const codigo = document.getElementById('codigo').value.trim();
+            const nombre = document.getElementById('nombre').value.trim();
+            const precio = parseFloat(document.getElementById('precio').value);
+            const cantidad = parseInt(document.getElementById('cantidad').value);
+            const categoria = document.getElementById('categoria').value;
+
+            // Validar código
+            if (!codigo) {
+                event.preventDefault();
+                alert('❌ El código del producto es obligatorio');
+                document.getElementById('codigo').focus();
+                return false;
+            }
+
+            if (!/^[A-Z0-9]+$/.test(codigo)) {
+                event.preventDefault();
+                alert('❌ El código debe contener solo mayúsculas y números');
+                document.getElementById('codigo').focus();
+                return false;
+            }
+
+            // Validar nombre
+            if (!nombre) {
+                event.preventDefault();
+                alert('❌ El nombre del producto es obligatorio');
+                document.getElementById('nombre').focus();
+                return false;
+            }
+
+            // Validar categoría
+            if (!categoria) {
+                event.preventDefault();
+                alert('❌ Debe seleccionar una categoría');
+                document.getElementById('categoria').focus();
+                return false;
+            }
+
+            // Validar precio
+            if (!precio || precio < 0) {
+                event.preventDefault();
+                alert('❌ Ingrese un precio válido (mayor a 0)');
+                document.getElementById('precio').focus();
+                return false;
+            }
+
+            // Validar cantidad
+            if (!Number.isInteger(cantidad) || cantidad < 0) {
+                event.preventDefault();
+                alert('❌ Ingrese una cantidad válida (número entero mayor o igual a 0)');
+                document.getElementById('cantidad').focus();
+                return false;
+            }
+
+            // Si todas las validaciones pasan
+            alert('✓ Formulario válido. Creando producto...');
+            return true;
+        }
+    </script>
+</body>
+</html>
